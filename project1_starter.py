@@ -1,7 +1,7 @@
 """
 COMP 163 - Project 1: Character Creator & Saving/Loading
 Name: Lemanuel Devane
-
+Date : 10/30/2025
 
 AI Usage: ChatGPT (GPT-5) helped with organization, finding syntax errors as well as creating dictionary for loading characters and developing code for main program main loop in case a file where information was not given arose.
 """
