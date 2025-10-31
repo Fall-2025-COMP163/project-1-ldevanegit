@@ -1,7 +1,7 @@
 """
 COMP 163 - Project 1: Character Creator & Saving/Loading
 Name: Lemanuel Devane
-
+Date: 10-30
 AI Usage: ChatGPT (GPT-5) helped with organization, finding syntax errors as well as creating dictionary for loading characters and developing code for main program in case a file with information was not given.
 """
 
@@ -15,6 +15,7 @@ def calculate_stats(class_name, level):
     Calculates base stats based on class and level.
     Each level adds +5 to all stats.
     """
+    class_name = class_name.capitalize()
     base_stats = {
         "Warrior": (15, 8, 70),
         "Mage": (7, 20, 90),
@@ -41,6 +42,7 @@ def create_character(name, class_name):
     Creates a character with the given class.
     Returns: character dictionary or None if invalid.
     """
+    class_name = class_name.capitalize()
     valid_classes = ["Warrior", "Mage", "Rogue", "Cleric"]
 
     if class_name not in valid_classes:
@@ -145,7 +147,7 @@ def level_up(character):
 if __name__ == "__main__":
     print("=== SOLO LEVELING CHARACTER CREATOR ===\n")
     name = input("Enter your character's name: ")
-    class_name = input("Enter your class (Warrior, Mage, Rogue, Cleric): ")
+    class_name = input("Enter your class (Warrior, Mage, Rogue, Cleric): ").capitalize()
 
     # Create character
     char = create_character(name, class_name)
