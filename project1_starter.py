@@ -1,30 +1,30 @@
 """
 COMP 163 - Project 1: Character Creator & Saving/Loading
 Name: Lemanuel Devane
-Date : 10/30/2025
-
-AI Usage: ChatGPT (GPT-5) helped with organization, finding syntax errors as well as creating dictionary for loading characters and developing code for main program main loop in case a file where information was not given arose.
+Date: 10-30
+AI Usage: ChatGPT (GPT-5) helped with organization, finding syntax errors as well as creating dictionary for loading characters and developing code for main program in case a file with information was not given.
 """
 
 import random
-import os  
+import os
 
-#calculate_stats function
-def calculate_stats(role, level):
+
+# calculate_stats function
+def calculate_stats(class_name, level):
     """
-    Calculates base stats based on role and level.
+    Calculates base stats based on class and level.
     Each level adds +5 to all stats.
     """
+    class_name = class_name.capitalize()
     base_stats = {
-        "Assassin":  (15, 8, 70),
-        "Healer":    (7, 15, 90),
-        "Tank":      (12, 10, 110),
-        "Assault":   (10, 10, 100),
-        "Unclassified": (20, 20, 150)
+        "Warrior": (15, 8, 70),
+        "Mage": (7, 20, 90),
+        "Rogue": (12, 10, 110),
+        "Cleric": (10, 21, 100)
     }
 
-    if role in base_stats:
-        strength, magic, health = base_stats[role]
+    if class_name in base_stats:
+        strength, magic, health = base_stats[class_name]
     else:
         strength, magic, health = (10, 10, 100)
 
@@ -36,35 +36,24 @@ def calculate_stats(role, level):
     return strength, magic, health
 
 
-#create_character function
-def create_character(name):
+# create_character function
+def create_character(name, class_name):
     """
-    Creates a character with a random role and type.
-    Returns: character dictionary
+    Creates a character with the given class.
+    Returns: character dictionary or None if invalid.
     """
-    roles = ["Assassin", "Healer", "Tank", "Assault", "Unclassified"]
+    class_name = class_name.capitalize()
+    valid_classes = ["Warrior", "Mage", "Rogue", "Cleric"]
 
-    # assigns random role to character
-    index = random.randint(0, len(roles)-1)
-    role = roles[index]  
+    if class_name not in valid_classes:
+        return None
 
-    #assigns your character type based on your role
-    if role in ["Assassin", "Assault"]:
-        type_ = "Striker"
-    elif role == "Tank":
-        type_ = "Vanguard"
-    elif role == "Healer":
-        type_ = "Support"
-    else:
-        type_ = "Special"
-    
     level = 1
-    strength, magic, health = calculate_stats(role, level)
+    strength, magic, health = calculate_stats(class_name, level)
 
     character = {
         "name": name,
-        "role": role,
-        "type": type_,
+        "class": class_name,
         "level": level,
         "strength": strength,
         "magic": magic,
@@ -75,13 +64,12 @@ def create_character(name):
     return character
 
 
-#display_character function
+# display_character function
 def display_character(character):
     """Prints formatted character sheet."""
     print("\n=== CHARACTER SHEET ===")
     print(f"Name: {character['name']}")
-    print(f"Role: {character['role']}")
-    print(f"Type: {character['type']}")
+    print(f"Class: {character['class']}")
     print(f"Level: {character['level']}")
     print(f"Strength: {character['strength']}")
     print(f"Magic: {character['magic']}")
@@ -89,7 +77,8 @@ def display_character(character):
     print(f"Gold: {character['gold']}")
     print("\n")
 
-#save_character funct
+
+# save_character function
 def save_character(character, filename):
     """
     Saves the character to a text file.
@@ -99,17 +88,16 @@ def save_character(character, filename):
         print("No filename entered. Character not saved.")
         return False
     else:
-        file = open(filename, "w")
-        file.write(f"Character Name: {character['name']}\n")
-        file.write(f"Role: {character['role']}\n")
-        file.write(f"Type: {character['type']}\n")
-        file.write(f"Level: {character['level']}\n")
-        file.write(f"Strength: {character['strength']}\n")
-        file.write(f"Magic: {character['magic']}\n")
-        file.write(f"Health: {character['health']}\n")
-        file.write(f"Gold: {character['gold']}\n")
-        file.close()
+        with open(filename, "w") as file:
+            file.write(f"Character Name: {character['name']}\n")
+            file.write(f"Class: {character['class']}\n")
+            file.write(f"Level: {character['level']}\n")
+            file.write(f"Strength: {character['strength']}\n")
+            file.write(f"Magic: {character['magic']}\n")
+            file.write(f"Health: {character['health']}\n")
+            file.write(f"Gold: {character['gold']}\n")
         return True
+
 
 # load_character function
 def load_character(filename):
@@ -121,9 +109,8 @@ def load_character(filename):
         print("File not found. Please check the name and try again.")
         return None
     else:
-        file = open(filename, "r")
-        lines = file.readlines()
-        file.close()
+        with open(filename, "r") as file:
+            lines = file.readlines()
 
         data = {}
         for line in lines:
@@ -135,8 +122,7 @@ def load_character(filename):
 
         character = {
             "name": data["Character Name"],
-            "role": data["Role"],
-            "type": data["Type"],
+            "class": data["Class"],
             "level": int(data["Level"]),
             "strength": int(data["Strength"]),
             "magic": int(data["Magic"]),
@@ -150,21 +136,25 @@ def load_character(filename):
 def level_up(character):
     """Increases level and recalculates stats."""
     character["level"] += 1
-    strength, magic, health = calculate_stats(character["role"], character["level"])
+    strength, magic, health = calculate_stats(character["class"], character["level"])
     character["strength"] = strength
     character["magic"] = magic
     character["health"] = health
     print(f"\n{character['name']} has leveled up to Level {character['level']}!\n")
 
 
-
 # MAIN PROGRAM
 if __name__ == "__main__":
     print("=== SOLO LEVELING CHARACTER CREATOR ===\n")
     name = input("Enter your character's name: ")
+    class_name = input("Enter your class (Warrior, Mage, Rogue, Cleric): ").capitalize()
 
     # Create character
-    char = create_character(name)
+    char = create_character(name, class_name)
+    if char is None:
+        print("Invalid class. Please restart and enter a valid one.")
+        exit()
+
     display_character(char)
 
     # Main loop
@@ -202,10 +192,3 @@ if __name__ == "__main__":
             running = False
         else:
             print("Invalid option. Try again.\n")
-
-    
-    # Example usage:
-    # char = create_character("TestHero", "Warrior")
-    # display_character(char)
-    # save_character(char, "my_character.txt")
-    # loaded = load_character("my_character.txt")
