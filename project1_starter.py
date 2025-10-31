@@ -79,6 +79,7 @@ def display_character(character):
 
 
 # save_character function
+#Chatgpt5assistance with dir_name to help gracefully deal with nonexistent files
 def save_character(character, filename):
     """
     Saves the character to a text file.
@@ -87,8 +88,11 @@ def save_character(character, filename):
     if filename == "":
         print("No filename entered. Character not saved.")
         return False
-    else:
-        with open(filename, "w") as file:
+    dir_name = os.path.dirname(filename)
+    if dir_name != "" and not os.path.exists(dir_name):
+        print(f"Directory '{dir_name}' does not exist. Character not saved.")
+        return False
+    with open(filename, "w") as file:
             file.write(f"Character Name: {character['name']}\n")
             file.write(f"Class: {character['class']}\n")
             file.write(f"Level: {character['level']}\n")
@@ -96,7 +100,7 @@ def save_character(character, filename):
             file.write(f"Magic: {character['magic']}\n")
             file.write(f"Health: {character['health']}\n")
             file.write(f"Gold: {character['gold']}\n")
-        return True
+    return True
 
 
 # load_character function
